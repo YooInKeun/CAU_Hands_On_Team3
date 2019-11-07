@@ -1,5 +1,5 @@
 from accounts.models import *
-from cosmetic.models import *
+from community.models import *
 from .serializer import *
 from django.core import serializers
 
