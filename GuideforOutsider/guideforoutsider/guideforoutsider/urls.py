@@ -24,4 +24,5 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('community/', include('community.urls')),
+    path('api/', include('api.urls')),
 ]
