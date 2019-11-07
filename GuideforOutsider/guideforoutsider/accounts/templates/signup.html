@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block extra-style %}
+<style>
+    .form-invalid {
+        color: red;
+    }
+
+    body {
+        background-color: white;
+        /* background-image: url(/static/img/main.jpeg); */
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center top;
+        background-attachment: fixed;
+        height: 100vh;
+        align-items: center;
+        display: flex;
+    }
+
+    .signup-content {
+        background-color: white;
+        box-shadow: 0 0 10px 5px cornflowerblue;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row d-flex justify-content-center align-content-center">
+        <div class="signup-content col-10 col-md-6 col-lg-5 px-5 py-4">
+            <div class="row d-flex justify-content-center">
+                <h1><a href="">독강러 길라잡이</a></h1>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <p>선배들의 꿀 Tip도 얻고, 팀플과 스터디도 구하고!</p>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <div class="w-100 alert alert-danger alert-dismissable show fade m-1" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% endfor %}
+                <form method="post" action="{% url 'accounts:signup' %}" class="w-100 p-1">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <p class="{{field.name}}-signup">
+                        {{ field }}
+                        {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                    </p>
+                    {% endfor %}
+                    <!-- <input type="text" class="email-signup" id="id_email" name="email"> -->
+                    <button type="submit" class="btn btn-outline-primary w-100">가입하기</button>
+                </form>
+            </div>
+            <hr />
+            <div class="row  d-flex justify-content-center">
+                <p>이미 계정이 있으신가요?</p>
+            </div>
+            <div class="row  d-flex justify-content-center">
+                <button type="submit" class="btn btn-outline-primary w-100 ml-1 mr-1">
+                    <a href="{% url 'accounts:login' %}">로그인하기</a>
+                </button>
+            </div>
+            <hr />
+            <div class="row  d-flex justify-content-center">
+                <p>회원가입 없이</p>
+            </div>
+            <div class="row  d-flex justify-content-center">
+                <a href="{% url 'home' %}">둘러보기</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const usernameInput = document.querySelector("#id_username");
+    const password1Input = document.querySelector("#id_password1");
+    const password2Input = document.querySelector("#id_password2");
+    const lastNameInput = document.querySelector("#id_last_name");
+    const emailInput = document.querySelector("#id_email");
+
+    const inputArray = [usernameInput, password1Input, password2Input, lastNameInput, emailInput];
+
+    for (var index in inputArray) {
+        if (inputArray[index] != null) {
+            inputArray[index].classList.add("form-control");
+            inputArray[index].classList.add("mb-2");
+        }
+    }
+
+    usernameInput.placeholder = "ID";
+    password1Input.placeholder = "Password";
+    password2Input.placeholder = "Password Confirmation";
+    emailInput.placeholder = "Email";
+    lastNameInput.placeholder = "Name";
+</script>
+{% endblock %}
+
+{% block extra-script %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extra-style %}
+<style>
+</style>
+{% endblock extra-style %}
+
+{% block navbar%}
+{% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>강의 검색창</h2>
+    <select>
+        <option value="강의명">강의명</option>
+        <option value="교수명">교수명</option>
+    </select>
+    <input>
+    <a class="navbar-brand" href="#" style="font-size:25px;">
+        <button type="button" class="btn btn-primary">
+            검색하기
+        </button>
+    </a>
+    <br/><br/>
+    <h1>강의 A</h1>
+    <h1>강의 B</h1>
+    <h1>강의 C</h1>
+    <h1>강의 D</h1>
+    <h1>강의 E</h1>
+    <h1>강의 F</h1>
+    <h1>강의 G</h1>
+    <h1>강의 H</h1>
+    <h1>강의 I</h1>
+</div>
+{% endblock content %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}
+
+{% block extra-script %}
+{% endblock extra-script %}
