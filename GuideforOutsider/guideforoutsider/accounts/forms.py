@@ -20,4 +20,4 @@ class CreateUserForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ("email", "nickname", "phone", "zip_code", "address", "address_detail")
+        fields = ("email", "nickname", "image", "student_number", "department")
