@@ -17,6 +17,7 @@ class Lecture(models.Model):
     professor_name = models.CharField(max_length=10, blank=True, default="")
     completion_division = models.CharField(max_length=10, blank=True, default="")
     note = models.CharField(max_length=10, blank=True, default="")
+    star = models.IntegerField(default=0)
 
     def __str__(self):
         return self.lecture_name
