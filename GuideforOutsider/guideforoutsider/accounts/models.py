@@ -9,7 +9,7 @@ class Profile(models.Model):
     email = models.EmailField(max_length=20, blank=True, default="")
     nickname = models.CharField(max_length=10, blank=True, default="")
     image = models.ImageField(blank=True)
-    student_number = models.IntegerField(default=0)
+    student_number = models.IntegerField(blank=True, null=True)
     department = models.CharField(max_length=10, blank=True, default="")
 
     def __str__(self):
