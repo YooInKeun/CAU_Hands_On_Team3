@@ -17,6 +17,8 @@
     <select>
         <option value="강의명">강의명</option>
         <option value="교수명">교수명</option>
+        <option value="이수구분">이수구분</option>
+        <option value="학년">학년</option>
     </select>
     <input>
     <a class="navbar-brand" href="#" style="font-size:25px;">
@@ -25,15 +27,12 @@
         </button>
     </a>
     <br/><br/>
-    <h1>강의 A</h1>
-    <h1>강의 B</h1>
-    <h1>강의 C</h1>
-    <h1>강의 D</h1>
-    <h1>강의 E</h1>
-    <h1>강의 F</h1>
-    <h1>강의 G</h1>
-    <h1>강의 H</h1>
-    <h1>강의 I</h1>
+    {% for lecture in lectures %}
+        강의명: {{lecture.lecture_name}}<br>
+        교수명: {{lecture.professor_name}}<br>
+        과목번호-분반: {{lecture.lecture_number}}
+        <br/><br/>
+    {% endfor %}
 </div>
 {% endblock content %}
 
