@@ -16,7 +16,8 @@ class Lecture(models.Model):
     lecture_name = models.CharField(max_length=30, blank=True, default="") # 과목명
     credit = models.IntegerField(blank=True, null=True) # 학점
     professor_name = models.CharField(max_length=10, blank=True, default="") # 담당교수
-    time_table = models.CharField(max_length=10, blank=True, default="") # 강의 시간
+    time_table = models.CharField(max_length=20, blank=True, default="") # 강의 시간
+
     year = models.IntegerField(default=2019) # 개설년도
     semester = models.IntegerField(default=2) # 개설학기
     note = models.CharField(max_length=10, blank=True, default="")
