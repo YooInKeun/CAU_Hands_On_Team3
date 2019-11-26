@@ -8,16 +8,19 @@ class Board_Category(models.Model):
         return self.board_category
 
 class Lecture(models.Model):
-    lecture_name = models.CharField(max_length=30, blank=True, default="")
-    divided_class_name = models.CharField(max_length=10, blank=True, default="")
-    time_table = models.CharField(max_length=10, blank=True, default="")
-    semester = models.IntegerField(default=0)
-    year = models.IntegerField(default=0)
-    capacity = models.IntegerField(default=0)
-    professor_name = models.CharField(max_length=10, blank=True, default="")
-    completion_division = models.CharField(max_length=10, blank=True, default="")
+    university = models.CharField(max_length=30, blank=True, default="") # 대학
+    department = models.CharField(max_length=30, blank=True, default="") # 개설학과
+    grade = models.CharField(max_length=5, blank=True, default="") # 학년
+    completion_division = models.CharField(max_length=10, blank=True, default="") # 이수구분
+    lecutre_number = models.CharField(max_length=10, blank=True, default="") # 과목번호-분반
+    lecture_name = models.CharField(max_length=30, blank=True, default="") # 과목명
+    credit = models.IntegerField(blank=True, null=True) # 학점
+    professor_name = models.CharField(max_length=10, blank=True, default="") # 담당교수
+    time_table = models.CharField(max_length=10, blank=True, default="") # 강의 시간
+    year = models.IntegerField(default=2019) # 개설년도
+    semester = models.IntegerField(default=2) # 개설학기
     note = models.CharField(max_length=10, blank=True, default="")
-    star = models.IntegerField(default=0)
+    star = models.IntegerField(default=0) # 강의 별점
 
     def __str__(self):
         return self.lecture_name
