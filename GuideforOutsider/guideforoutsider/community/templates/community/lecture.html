@@ -68,6 +68,7 @@
         학점: {{lecture.credit}}<br>
         이수구분: {{lecture.completion_division}}<br>
         강의평가: {{lecture.star}}<br>
+        <a href="{% url 'community:lecture_detail' lecture.id %}"><button class="btn btn-primary btn-sm">게시판 바로가기</button></a>
     </div>
     {% endfor %}
 

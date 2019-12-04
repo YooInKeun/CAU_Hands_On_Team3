@@ -13,7 +13,7 @@ class Profile(models.Model):
     department = models.CharField(max_length=10, blank=True, default="")
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

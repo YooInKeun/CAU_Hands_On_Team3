@@ -22,3 +22,20 @@ def query_lecture(request):
     searched_category = request.GET['category']
     searched_content = request.GET['content']
     return render(request, 'community/lecture.html', {'lectures':lectures, 'searched_category':searched_category, 'searched_content':searched_content})
+
+def lecture_detail(request, pk):
+    lecture_pk = pk
+    studies = Board.objects.filter(board_category__board_category="스터디", lecture=pk)
+    teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=pk)
+    reviews = Board.objects.filter(board_category__board_category="강의 후기", lecture=pk)
+    return render(request, 'community/lecture_detail.html', {'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
+
+def create_board(request, pk):
+    lecture_pk = pk
+    selected_lecture= Lecture.objects.filter(pk=pk)[0]
+    return render(request, 'community/create_board.html', {'lecture_pk':lecture_pk, 'selected_lecture':selected_lecture})
+
+def complete_create_board(request, pk):
+    lecture_pk = pk
+    selected_lecture= Lecture.objects.filter(pk=pk)[0]
+    return render(request, 'community/create_board.html', {'lecture_pk':lecture_pk, 'selected_lecture':selected_lecture})

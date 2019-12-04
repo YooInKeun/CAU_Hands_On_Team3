@@ -41,6 +41,12 @@ class Board(models.Model):
     def __str__(self):
         return '[' + str(self.lecture) + '] ' + str(self.title)
 
+    @property
+    def created_at_korean_time(self):
+        korean_timezone = timezone(settings.TIME_ZONE)
+        return self.created_at.astimezone(korean_timezone)
+
+
 class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
