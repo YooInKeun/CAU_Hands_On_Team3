@@ -15,6 +15,10 @@
     margin-right:15px;
     padding:25px;
 }
+
+.update-or-delete{
+    display: inline-block;
+}
 </style>
 {% endblock extra-style %}
 
@@ -24,16 +28,19 @@
 
 {% block content %}
 <div class="container" id="app">
+    <div>
+        강의명: {{lecture_name}}
+    </div>
     <div class="col-12 col-lg-4 mt-5 mb-5 pt-1 pl-2 right-row">
         <div class="row">
             <div @click=selectCategory(1)  class="col-4 my-cosmetic-tap kind-tap selected-kind-tap">
-                <div>스터디</div>
+                <div>스터디(v)</div>
             </div>
             <div @click=selectCategory(2) class="col-4 interested-cosmetic-tap kind-tap">
-                <div>팀플</div>
+                <div>팀플(v)</div>
             </div>
             <div @click=selectCategory(3) class="col-4 interested-cosmetic-tap kind-tap">
-                <div>강의 후기</div>
+                <div>강의 후기(v)</div>
             </div>
             <div class="col-4 rest-space"></div>
         </div>
@@ -41,39 +48,72 @@
 
     <a href="{% url 'community:lecture' %}"><button class="btn btn-success btn-sm">강의 바로가기</button></a>
     <a href="{% url 'community:create_board' lecture_pk %}"><button class="btn btn-primary btn-sm">게시글 작성하기</button></a>
-    <div class="board-list">
+    <div>
         <div v-if="selectedContent === 1">
             <div>
                 {% for study in studies %}
-                제목: {{study.title}}<br>
-                내용: {{study.content}}<br>
-                작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                조회수: {{study.hits}}<br>
-                좋아요 수: {{study.good}}<br>
-                모집 완료 여부: {{study.is_completed}}<br>
+                <div class="board-list">
+                    작성자: {{study.user}}
+                    <div class="update-or-delete">
+                        {% if request.user == study.user %}
+                        <a href="{% url 'community:update_board' study.pk %}">수정하기</a>
+                        <a href="{% url 'community:delete_board' study.pk %}">삭제하기</a>
+                        {% endif%}
+                    </div>
+                    <br>
+
+                    제목: {{study.title}}<br>
+                    내용: {{study.content}}<br>
+                    작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
+                    조회수: {{study.hits}}<br>
+                    좋아요 수: {{study.good}}<br>
+                    모집 완료 여부: {{study.is_completed}}<br>
+                </div>
                 {% endfor %}
             </div>
         </div>
         <div v-else-if="selectedContent === 2">
             <div>
                 {% for teamplay in teamplays %}
-                제목: {{teamplay.title}}<br>
-                내용: {{teamplay.content}}<br>
-                작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                조회수: {{teamplay.hits}}<br>
-                좋아요 수: {{teamplay.good}}<br>
-                모집 완료 여부: {{teamplay.is_completed}}<br>
+                <div class="board-list">
+                    작성자: {{teamplay.user}}
+                    <div class="update-or-delete">
+                        {% if request.user == teamplay.user %}
+                        <a href="{% url 'community:update_board' teamplay.pk %}">수정하기</a>
+                        <a href="{% url 'community:delete_board' teamplay.pk %}">삭제하기</a>
+                        {% endif%}
+                    </div>
+                    <br>
+
+                    제목: {{teamplay.title}}<br>
+                    내용: {{teamplay.content}}<br>
+                    작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
+                    조회수: {{teamplay.hits}}<br>
+                    좋아요 수: {{teamplay.good}}<br>
+                    모집 완료 여부: {{teamplay.is_completed}}<br>
+                </div>
                 {% endfor %}
             </div>
         </div>
         <div v-else-if="selectedContent === 3">
             <div>
                 {% for review in reviews %}
-                제목: {{review.title}}<br>
-                내용: {{review.content}}<br>
-                작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                조회수: {{review.hits}}<br>
-                좋아요 수: {{review.good}}<br>
+                <div class="board-list">
+                    작성자: {{review.user}}
+                    <div class="update-or-delete">
+                        {% if request.user == review.user %}
+                        <a href="{% url 'community:update_board' review.pk %}">수정하기</a>
+                        <a href="{% url 'community:delete_board' review.pk %}">삭제하기</a>
+                        {% endif%}
+                    </div>
+                    <br>
+
+                    제목: {{review.title}}<br>
+                    내용: {{review.content}}<br>
+                    작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
+                    조회수: {{review.hits}}<br>
+                    좋아요 수: {{review.good}}<br>
+                </div>
                 {% endfor %}
             </div>
         </div>

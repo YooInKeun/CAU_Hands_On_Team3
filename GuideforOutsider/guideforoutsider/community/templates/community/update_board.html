@@ -13,6 +13,7 @@
 
 {% block content %}
 <div class="container" id="app">
+    <h2>게시판 수정페이지 입니다</h2>
     <form action="{% url 'community:complete_create_board' lecture_pk %}" method="POST">
         {% csrf_token %}
         강의명: {{selected_lecture}}<br>
