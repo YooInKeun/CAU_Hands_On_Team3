@@ -3,15 +3,73 @@
 {% load staticfiles %}
 
 {% block extra-style %}
-<style>
+<head>
+    <meta charset="UTF-8">
+    <title>컴공 독강러를 위한 길라잡이 | 강의 선택</title>
+    <link rel="stylesheet" href="./lecture.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR|Song+Myung&display=swap" rel="stylesheet">
+    <style>
+        @import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+            
+        </style>
+</head>
+
+<style>   
+
+section{
+  display:block;
+  width: 1200px; 
+  height: cover; 
+  overflow-y: auto; 
+  -ms-overflow-style: none;
+  background:rgb(240, 236, 236);
+  font-size:80%;
+  margin:auto;
+  border-top:1px solid black;
+  border-bottom:1px solid black;
+  border-right:1px solid black;
+  border-left:1px solid black;
+ 
+}
+aside{
+    float:left;
+    margin-top:120px;
+    color:black;
+    font-family: 'Hanna', sans-serif;
+    margin-right:20px;
+    border-right:1px solid black;
+   
+}
+aside div{
+    font-size:20px; position: fixed;
+
+}
+aside div strong{
+    color:cornflowerblue;
+}
+.logo{
+    display: inline-block;
+   margin-left:400px;
+   margin-top:10px;
+    position: absolute;
+    left:0;
+}
+.top-wrap{
+    height:100px;
+    position: relative;
+    border-bottom:1px solid black;
+}
+.search{
+    display:inline-block;
+}
 .search-bar{
     text-align: center;
 }
 
 .lecture-list{
-    border:1px solid cornflowerblue;
+    border:3px solid cornflowerblue;
     border-radius:12px;
-    border-color:black;
+    /*border-color:black;
     /* box-shadow: 0 0 10px 5px cornflowerblue; */
     margin-top:10px;
     margin-bottom:10px;
@@ -35,59 +93,70 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <div class="search-bar">
-        <h2>강의 검색</h2>
-        <br/>
-        <form method="GET" action="{% url 'community:query_lecture' %}">
-            <select name='category'>
-                <option value="강의명">강의명</option>
-                <option value="교수명">교수명</option>
-                <option value="전공/교양">전공/교양</option>
-                <option value="학년">학년</option>
-            </select>
-            <input type="text" class="search" name='content'>
-            <input class="btn btn-primary" type="submit" value="검색하기">
-        </form>
-    </div>
-    <div class='search-result'>
-        {% if request.path == '/community/lecture/query/' %}
-        <br/>
-        <h4>{{searched_category}}을 "{{searched_content}}"(으)로 검색한 결과입니다</h4><a href="{% url 'community:lecture' %}">(원래대로)</a><br/>
-        {% endif %}
-    </div>
-    <br/><br/>
+<body>
+    <aside>
+        <div style="writing-mode:tb-rl"><h1> 당신의 <strong>팀원</strong>을 찾아보세요<br><strong>컴공 독강러</strong>를 위한 길라잡이</h1></div>
+    </aside>  
+   
+        <div>
+        
+            <div class="search-bar">
+                
+                <h2> <img src="/static/img/reading.png" alt="mainlogo">강의 검색</h2>
+                <br/>
+                <form method="GET" action="{% url 'community:query_lecture' %}">
+                    <select name='category'>
+                    
+                        <option value="강의명">강의명</option>
+                        <option value="교수명">교수명</option>
+                        <option value="전공/교양">전공/교양</option>
+                        <option value="학년">학년</option>
+                    </select>
+                    <input type="text" class="search" name='content'>
+                    <input class="btn btn-primary" type="submit" value="검색하기">
+                </form>
+            </div>
+            
+            <div class='search-result'>
+                {% if request.path == '/community/lecture/query/' %}
+                <br/>
+                <h4>{{searched_category}}을 "{{searched_content}}"(으)로 검색한 결과입니다</h4><a href="{% url 'community:lecture' %}">(원래대로)</a><br/>
+                {% endif %}
+            </div>
+            <br/><br/>
+    <section>
+            {% for lecture in lectures %}
+            <div class="lecture-list">
+                강의명: {{lecture.lecture_name}}<br>
+                교수명: {{lecture.professor_name}}<br>
+                과목번호-분반: {{lecture.lecture_number}}<br>
+                시간표: {{lecture.time_table}}<br>
+                학년: {{lecture.grade}}<br>
+                학점: {{lecture.credit}}<br>
+                이수구분: {{lecture.completion_division}}<br>
+                강의평가: {{lecture.star}}<br>
+                <a href="{% url 'community:lecture_detail' lecture.id %}"><button class="btn btn-primary btn-sm">게시판 바로가기</button></a>
+            </div>
+            {% endfor %}
 
-    {% for lecture in lectures %}
-    <div class="lecture-list">
-        강의명: {{lecture.lecture_name}}<br>
-        교수명: {{lecture.professor_name}}<br>
-        과목번호-분반: {{lecture.lecture_number}}<br>
-        시간표: {{lecture.time_table}}<br>
-        학년: {{lecture.grade}}<br>
-        학점: {{lecture.credit}}<br>
-        이수구분: {{lecture.completion_division}}<br>
-        강의평가: {{lecture.star}}<br>
-        <a href="{% url 'community:lecture_detail' lecture.id %}"><button class="btn btn-primary btn-sm">게시판 바로가기</button></a>
-    </div>
-    {% endfor %}
-
-    <div class="paginator">
-        {% if request.path == '/community/lecture/' %}
-            {% if lectures.has_previous %}
-                <a href="?page=1">First</a>
-                <a href="?page={{lectures.previous_page_number}}">Previous</a>
-            {% endif %}
-                <span>{{lectures.number}}</span>
-                <span>of<span>
-                <span>{{lectures.paginator.num_pages}}</span>
-            {% if lectures.has_next %}
-                <a href="?page={{lectures.next_page_number}}">Next</a>
-                <a href="?page={{lectures.paginator.num_pages}}">Last</a>
-            {% endif %}
-        {% endif %}
-    </div>
-</div>
+            <div class="paginator">
+                {% if request.path == '/community/lecture/' %}
+                    {% if lectures.has_previous %}
+                        <a href="?page=1">First</a>
+                        <a href="?page={{lectures.previous_page_number}}">Previous</a>
+                    {% endif %}
+                        <span>{{lectures.number}}</span>
+                        <span>of<span>
+                        <span>{{lectures.paginator.num_pages}}</span>
+                    {% if lectures.has_next %}
+                        <a href="?page={{lectures.next_page_number}}">Next</a>
+                        <a href="?page={{lectures.paginator.num_pages}}">Last</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</body>
 {% endblock content %}
 
 {% block footer %}

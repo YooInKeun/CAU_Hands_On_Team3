@@ -57,14 +57,31 @@ def complete_create_board(request, pk):
 def update_board(request, pk):
     board_pk = pk
     selected_board= Board.objects.filter(pk=board_pk)[0]
-    return render(request, 'community/update_board.html', {'board_pk':board_pk, 'selected_board':selected_board})
+    lecture_pk = selected_board.lecture.pk
+    return render(request, 'community/update_board.html', {'board_pk':board_pk, 'selected_board':selected_board, 'lecture_pk':lecture_pk})
 
 def complete_update_board(request, pk):
-    lecture_pk = pk
-    selected_lecture= Lecture.objects.filter(pk=pk)[0]
-    return render(request, 'community/create_board.html', {'lecture_pk':lecture_pk, 'selected_lecture':selected_lecture})
+    board_pk = pk
+    board= Board.objects.filter(pk=board_pk)[0]
+    board.title = request.POST['title']
+    board.content = request.POST['content']
+    board.save()
+
+    lecture_name = board.lecture.lecture_name
+    lecture_pk = board.lecture.pk
+    studies = Board.objects.filter(board_category__board_category="스터디", lecture=lecture_pk)
+    teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)
+    reviews = Board.objects.filter(board_category__board_category="강의 후기", lecture=lecture_pk)
+    return render(request, 'community/lecture_detail.html', {'lecture_name':lecture_name, 'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
 
 def delete_board(request, pk):
-    lecture_pk = pk
-    selected_lecture= Lecture.objects.filter(pk=pk)[0]
-    return render(request, 'community/create_board.html', {'lecture_pk':lecture_pk, 'selected_lecture':selected_lecture})
+    board_pk = pk
+    board= Board.objects.get(pk=board_pk)
+    lecture_name = board.lecture.lecture_name
+    lecture_pk = board.lecture.pk
+    board.delete()
+    
+    studies = Board.objects.filter(board_category__board_category="스터디", lecture=lecture_pk)
+    teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)
+    reviews = Board.objects.filter(board_category__board_category="강의 후기", lecture=lecture_pk)
+    return render(request, 'community/lecture_detail.html', {'lecture_name':lecture_name, 'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
