@@ -3,6 +3,8 @@ from .models import *
 from django.core.paginator import Paginator
 
 def lecture(request):
+    if request.user.is_authenticated is False:
+        return redirect('accounts:login')
     lectures = Lecture.objects.all().order_by('-id')
     post_paginator = Paginator(lectures, 7)
     page = request.GET.get('page')
@@ -140,9 +142,9 @@ def complete_update_reply(request, pk):
     lecture_name = board.lecture.lecture_name
     lecture_pk = board.lecture.pk
 
-    study_replys = Reply.objects.filter(board__board_category__board_category="스터디", board__lecture=pk)
-    teamply_replys = Reply.objects.filter(board__board_category__board_category="팀플", board__lecture=pk)
-    review_replys = Reply.objects.filter(board__board_category__board_category="강의 후기", board__lecture=pk)
+    study_replys = Reply.objects.filter(board__board_category__board_category="스터디", board__lecture=lecture_pk)
+    teamply_replys = Reply.objects.filter(board__board_category__board_category="팀플", board__lecture=lecture_pk)
+    review_replys = Reply.objects.filter(board__board_category__board_category="강의 후기", board__lecture=lecture_pk)
 
     studies = Board.objects.filter(board_category__board_category="스터디", lecture=lecture_pk)
     teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)
@@ -150,15 +152,15 @@ def complete_update_reply(request, pk):
     return render(request, 'community/lecture_detail.html', {'study_replys':study_replys, 'teamplay_replys':teamply_replys, 'review_replys':review_replys, 'lecture_name':lecture_name, 'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
 
 def delete_reply(request, pk):
-    board_pk = pk
-    board= Board.objects.get(pk=board_pk)
-    lecture_name = board.lecture.lecture_name
-    lecture_pk = board.lecture.pk
-    board.delete()
+    reply_pk = pk
+    reply= Reply.objects.get(pk=reply_pk)
+    lecture_name = reply.board.lecture.lecture_name
+    lecture_pk = reply.board.lecture.pk
+    reply.delete()
 
-    study_replys = Reply.objects.filter(board__board_category__board_category="스터디", board__lecture=pk)
-    teamply_replys = Reply.objects.filter(board__board_category__board_category="팀플", board__lecture=pk)
-    review_replys = Reply.objects.filter(board__board_category__board_category="강의 후기", board__lecture=pk)
+    study_replys = Reply.objects.filter(board__board_category__board_category="스터디", board__lecture=lecture_pk)
+    teamply_replys = Reply.objects.filter(board__board_category__board_category="팀플", board__lecture=lecture_pk)
+    review_replys = Reply.objects.filter(board__board_category__board_category="강의 후기", board__lecture=lecture_pk)
 
     studies = Board.objects.filter(board_category__board_category="스터디", lecture=lecture_pk)
     teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)

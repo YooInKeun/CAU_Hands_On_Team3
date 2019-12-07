@@ -85,6 +85,10 @@ aside div strong{
 .paginator{
     text-align:center;
 }
+
+.body{
+    font-family: 'Hanna', sans-serif;
+}
 </style>
 {% endblock extra-style %}
 
@@ -102,7 +106,7 @@ aside div strong{
         
             <div class="search-bar">
                 
-                <h2> <a href="{% url 'home' %}" class="button logo"><img src="/static/img/reading.png" alt="mainlogo"></a>강의 검색</h2>
+                <h2><a href="{% url 'home' %}" class="button logo"><img src="/static/img/reading.png" alt="mainlogo"></a>강의 검색</h2>
                 <br/>
                 <form method="GET" action="{% url 'community:query_lecture' %}">
                     <select name='category'>
