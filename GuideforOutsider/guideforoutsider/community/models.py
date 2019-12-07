@@ -12,7 +12,7 @@ class Lecture(models.Model):
     department = models.CharField(max_length=30, blank=True, default="") # 개설학과
     grade = models.CharField(max_length=5, blank=True, default="") # 학년
     completion_division = models.CharField(max_length=10, blank=True, default="") # 이수구분
-    lecutre_number = models.CharField(max_length=10, blank=True, default="") # 과목번호-분반
+    lecture_number = models.CharField(max_length=10, blank=True, default="") # 과목번호-분반
     lecture_name = models.CharField(max_length=30, blank=True, default="") # 과목명
     credit = models.IntegerField(blank=True, null=True) # 학점
     professor_name = models.CharField(max_length=10, blank=True, default="") # 담당교수
