@@ -197,6 +197,25 @@ section .card{
                             조회수: {{study.hits}}<br>
                             좋아요 수: {{study.good}}<br>
                             모집 완료 여부: {{study.is_completed}}<br>
+                            <hr>
+                            {% for study_reply in study_replys %}
+                            {% ifequal study_reply.board study %}
+                            유저: {{study_reply.user}}<br>
+                            댓글 내용: {{study_reply.content}}<br>
+                            {% if request.user == study_reply.user %}
+                            <a href="{% url 'community:update_reply' study_reply.pk %}">수정하기</a>
+                            <a href="{% url 'community:delete_reply' study_reply.pk %}">삭제하기</a>
+                            <br><br>
+                            {% endif%}
+                            {% endifequal %}
+                            {% endfor %}
+                            <form method="POST" action="{% url 'community:create_reply' study.id %}">
+                                {% csrf_token %}
+                                <div class="reply">
+                                    댓글: <textarea name="reply"></textarea>
+                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                </div>
+                            </form>
                         </div>
                         {% endfor %}
                     </div>
@@ -220,6 +239,25 @@ section .card{
                             조회수: {{teamplay.hits}}<br>
                             좋아요 수: {{teamplay.good}}<br>
                             모집 완료 여부: {{teamplay.is_completed}}<br>
+                            <hr>
+                            {% for teamplay_reply in teamplay_replys %}
+                            {% ifequal teamplay_reply.board teamplay %}
+                            유저: {{teamplay_reply.user}}<br>
+                            댓글 내용: {{teamplay_reply.content}}<br>
+                            {% if request.user == teamplay_reply.user %}
+                            <a href="{% url 'community:update_reply' teamplay_reply.pk %}">수정하기</a>
+                            <a href="{% url 'community:delete_reply' teamplay_reply.pk %}">삭제하기</a>
+                            <br><br>
+                            {% endif%}
+                            {% endifequal %}
+                            {% endfor %}
+                            <form method="POST" action="{% url 'community:create_reply' teamplay.id %}">
+                                {% csrf_token %}
+                                <div class="reply">
+                                    댓글: <textarea name="reply"></textarea>
+                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                </div>
+                            </form>
                         </div>
                         {% endfor %}
                     </div>
@@ -242,6 +280,26 @@ section .card{
                             작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
                             조회수: {{review.hits}}<br>
                             좋아요 수: {{review.good}}<br>
+                            모집 완료 여부: {{review.is_completed}}<br>
+                            <hr>
+                            {% for review_reply in review_replys %}
+                            {% ifequal review_reply.board review %}
+                            유저: {{review_reply.user}}<br>
+                            댓글 내용: {{review_reply.content}}<br>
+                            {% if request.user == review_reply.user %}
+                            <a href="{% url 'community:update_reply' review_reply.pk %}">수정하기</a>
+                            <a href="{% url 'community:delete_reply' review_reply.pk %}">삭제하기</a>
+                            <br><br>
+                            {% endif%}
+                            {% endifequal %}
+                            {% endfor %}
+                            <form method="POST" action="{% url 'community:create_reply' review.id %}">
+                                {% csrf_token %}
+                                <div class="reply">
+                                    댓글: <textarea name="reply"></textarea>
+                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                </div>
+                            </form>
                         </div>
                         {% endfor %}
                     </div>

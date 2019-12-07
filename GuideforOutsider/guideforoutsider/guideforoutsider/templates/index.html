@@ -3,8 +3,28 @@
 {% load staticfiles %}
 
 {% block extra-style %}
+<head>
+        <link rel="stylesheet" href="../../static/css/mainpage.css">
+        <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR|Song+Myung&display=swap" rel="stylesheet">
+        <style>
+        @import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+        
+        </style>
+</head>
 <style>
+h1>strong{
+    color:cornflowerblue;
+  }
+  
+  .content{
+        font-family: 'Hanna', sans-serif;
+        text-align: center;
+      }
+
+      
+
 </style>
+
 {% endblock extra-style %}
 
 {% block navbar %}
@@ -13,16 +33,29 @@
 
 {% block content %}
 <br/>
-<h1>첫 페이지</h1>
+<div class="content">
+        <br/><br/>
+        <a class="navbar-brand" href="{% url 'home' %}">
+                <a href="{% url 'home' %}" class="button logo">
+                <img src="../../static/img/reading.png" alt="로고"></a>
+        </a>
+        <br/><br/>
+        <h1>더 이상 <strong>독강</strong>이 두렵지 않게,<br>
+            당신을 위한 팀원 매칭 서비스 <br>
+            <strong>컴공 독강러를 위한 길라잡이</strong></h1>
+            <br><br><br>
+            {% if user.is_authenticated %}
+            <input type="button" class="btn btn-outline-primary btn-lg w-30 m-1" value="게시판 바로가기" onclick="location.href='{% url 'community:lecture' %}'">
+            {% else %}
+            <input type="button" class="btn btn-outline-primary btn-lg w-30 m-1" value="회원가입" onclick="location.href='{% url 'accounts:signup' %}'">
+            {% endif %}
+            <br><br><br>
+</div>
 <br/>
-<a class="navbar-brand" href="{% url 'community:lecture' %}" style="font-size:25px;">
-    <button type="button" class="btn">
-        게시판 바로가기(클릭)
-    </button>
-</a>
 {% endblock content %}
 
 {% block footer %}
+{% include 'footer.html' %}
 {% endblock footer %}
 
 {% block extra-script %}

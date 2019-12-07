@@ -54,7 +54,7 @@ class Reply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     anonymity = models.BooleanField(default=False)
     good = models.IntegerField(default=0)
-    re_reply = models.ForeignKey('self', blank=True, on_delete=models.CASCADE)
+    re_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.board) + '(' + str(self.user) + ')'
