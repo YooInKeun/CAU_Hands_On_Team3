@@ -134,6 +134,10 @@ section .card{
 h5, h6 {
     display: inline;
 }
+
+.user-name:hover {
+  color: #81c147 !important;
+}
 </style>
 {% endblock extra-style %}
 
@@ -191,7 +195,31 @@ h5, h6 {
                     <div>
                         {% for study in studies %}
                         <div class="board-list">
-                            <h4 style="color:cornflowerblue">작성자: {{study.user}}</h4>
+                            <h4 class="user-name" style="color:cornflowerblue" @click="messageModalOpen({{study.user.id}})">작성자: {{study.user}}</h4>
+
+                            <div class="modal fade" id="{{study.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{study.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' study.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             <div style="text-align: right;">
                             <h6>
                             작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}
@@ -212,7 +240,31 @@ h5, h6 {
                             <hr>
                             {% for study_reply in study_replys %}
                             {% ifequal study_reply.board study %}
-                            <strong style="color:black">{{study_reply.user}}</strong>
+                            <strong class="user-name" style="color:black" @click="messageModalOpen({{study_reply.user.id}})">{{study_reply.user}}</strong>
+
+                            <div class="modal fade" id="{{study_reply.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{study_reply.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' study_reply.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             &nbsp;&nbsp;{{study_reply.content}}<br>
                             {% if request.user == study_reply.user %}
                             <a style="color:blue" data-toggle="modal" onclick="modalOpen({{study_reply.pk}});">
@@ -280,7 +332,31 @@ h5, h6 {
                     <div>
                         {% for teamplay in teamplays %}
                         <div class="board-list">
-                            <h4 style="color:cornflowerblue">작성자: {{teamplay.user}}</h4>
+                            <h4 class="user-name" style="color:cornflowerblue" @click="messageModalOpen({{teamplay.user.id}})">작성자: {{teamplay.user}}</h4>
+
+                            <div class="modal fade" id="{{teamplay.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{teamplay.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' teamplay.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             <div style="text-align: right;">
                             <h6>
                             작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}
@@ -301,13 +377,37 @@ h5, h6 {
                             <hr>
                             {% for teamplay_reply in teamplay_replys %}
                             {% ifequal teamplay_reply.board teamplay %}
-                            <strong style="color:black">{{teamplay_reply.user}}</strong>
+                            <strong class="user-name" style="color:black" @click="messageModalOpen({{teamplay_reply.user.id}})">{{teamplay_reply.user}}</strong>
+
+                            <div class="modal fade" id="{{teamplay_reply.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{teamplay_reply.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' teamplay_reply.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             &nbsp;&nbsp;{{teamplay_reply.content}}<br>
                             {% if request.user == teamplay_reply.user %}
-                            <a style="color:blue" data-toggle="modal" data-target="#exampleModal">
+                            <a style="color:blue" data-toggle="modal" onclick="modalOpen({{teamplay_reply.pk}});">
                                     수정하기
                                 </a>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="{{teamplay_reply.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                         <div class="modal-header">
@@ -368,7 +468,31 @@ h5, h6 {
                     <div>
                         {% for review in reviews %}
                         <div class="board-list">
-                            <h4 style="color:cornflowerblue">작성자: {{review.user}}</h4>
+                            <h4 class="user-name" style="color:cornflowerblue" @click="messageModalOpen({{review.user.id}})">작성자: {{review.user}}</h4>
+
+                            <div class="modal fade" id="{{review.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{review.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' review.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             <div style="text-align: right;">
                             <h6>
                             작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}
@@ -389,13 +513,37 @@ h5, h6 {
                             <hr>
                             {% for review_reply in review_replys %}
                             {% ifequal review_reply.board review %}
-                            <strong style="color:black">{{review_reply.user}}</strong>
+                            <strong class="user-name"  style="color:black" @click="messageModalOpen({{review_reply.user.id}})">{{review_reply.user}}</strong>
+
+                            <div class="modal fade" id="{{review_reply.user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{review_reply.user}}님에게 쪽지 보내기</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:create_message' review_reply.user.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                                        </div>
+                                        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="작성완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
                             &nbsp;&nbsp;{{review_reply.content}}<br>
                             {% if request.user == review_reply.user %}
-                            <a style="color:blue" data-toggle="modal" data-target="#exampleModal">
+                            <a style="color:blue" data-toggle="modal" onclick="modalOpen({{review_reply.pk}});">
                                     수정하기
                                 </a>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="{{review_reply.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                         <div class="modal-header">
@@ -478,6 +626,9 @@ h5, h6 {
     methods: {
         selectCategory(num){
             this.selectedContent = num;
+        },
+        messageModalOpen(user){
+            $("#" + user).modal();
         }
     },
   })
@@ -495,9 +646,9 @@ function noEvent() { // 새로 고침 방지
     }
 document.onkeydown = noEvent;
 
-
 function modalOpen(x){
     $("#" + x).modal();
 }
+
 </script>
 {% endblock extra-script %}

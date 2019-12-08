@@ -179,3 +179,24 @@ def delete_reply(request, pk):
     teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)
     reviews = Board.objects.filter(board_category__board_category="강의 후기", lecture=lecture_pk)
     return render(request, 'community/lecture_detail.html', {'study_replys':study_replys, 'teamplay_replys':teamply_replys, 'review_replys':review_replys, 'lecture_name':lecture_name, 'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
+
+def create_message(request, pk):
+    user_pk = pk
+    lecture_pk = request.POST['lecture_pk']
+    lecture_name = Lecture.objects.get(pk=lecture_pk).lecture_name
+
+    message = Message()
+    message.sender = request.user
+    message.receiver = User.objects.get(pk=user_pk)
+    message.board = Board.objects.filter(lecture__pk=lecture_pk)[0]
+    message.content = request.POST['message']
+    message.save()
+
+    study_replys = Reply.objects.filter(board__board_category__board_category="스터디", board__lecture=lecture_pk)
+    teamply_replys = Reply.objects.filter(board__board_category__board_category="팀플", board__lecture=lecture_pk)
+    review_replys = Reply.objects.filter(board__board_category__board_category="강의 후기", board__lecture=lecture_pk)
+
+    studies = Board.objects.filter(board_category__board_category="스터디", lecture=lecture_pk)
+    teamplays = Board.objects.filter(board_category__board_category="팀플", lecture=lecture_pk)
+    reviews = Board.objects.filter(board_category__board_category="강의 후기", lecture=lecture_pk)
+    return render(request, 'community/lecture_detail.html', {'study_replys':study_replys, 'teamplay_replys':teamply_replys, 'review_replys':review_replys, 'lecture_name':lecture_name, 'lecture_pk':lecture_pk, 'studies':studies, 'teamplays':teamplays, 'reviews':reviews})
