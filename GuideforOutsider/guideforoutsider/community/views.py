@@ -72,9 +72,17 @@ def update_board(request, pk):
 
 def complete_update_board(request, pk):
     board_pk = pk
+    board_is_completed = False
     board= Board.objects.filter(pk=board_pk)[0]
     board.title = request.POST['title']
     board.content = request.POST['content']
+
+    if str(request.POST['is_completed']) == '완료':
+        board_is_completed = True
+    elif str(request.POST['is_completed']) == '미완료':
+        board_is_completed = False
+
+    board.is_completed = board_is_completed
     board.save()
 
     lecture_name = board.lecture.lecture_name

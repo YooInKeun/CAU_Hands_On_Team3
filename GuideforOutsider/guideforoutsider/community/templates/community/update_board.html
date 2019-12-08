@@ -30,6 +30,14 @@ strong{
         <h2 style="text-align: center;"><strong>{{selected_board.lecture}}</strong> 게시글 수정</h2><br>
         <strong style="color:darkgray">분류</strong>
         {{selected_board.board_category}}<br><br>
+
+        <strong style="color:darkgray">모집 완료 여부</strong>
+        <select name='is_completed'>
+            <option value="미완료">미완료</option>
+            <option value="완료">완료</option>
+        </select>
+        <br><br>
+
         <strong style="color:darkgray">제목</strong>
         <textarea class="form-control" id="exampleFormControlTextarea3" rows="1" name="title" placeholder="제목을 입력하세요">{{selected_board.title}}</textarea><br>
         <strong style="color:darkgray">내용</strong> 

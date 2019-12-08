@@ -224,6 +224,14 @@ h5, h6 {
                             <div style="text-align: right;">
                             <h6>
                             작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}
+                            (모집 완료 여부: 
+                            {% ifequal study.is_completed False %}
+                            <strong style="color:black !important">미완료</strong>)
+                            {% endifequal %}
+
+                            {% ifequal study.is_completed True %}
+                            <strong style="color:black !important">완료</strong>)
+                            {% endifequal %}
                             <!-- &nbsp;&nbsp;&nbsp; -->
                                 <!-- 댓글수: {{study.hits}}--><br>
                                 {% if request.user == study.user %}
@@ -361,6 +369,15 @@ h5, h6 {
                             <div style="text-align: right;">
                             <h6>
                             작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}
+                            (모집 완료 여부: 
+                            {% ifequal teamplay.is_completed False %}
+                            <strong style="color:black !important">미완료</strong>)
+                            {% endifequal %}
+
+                            {% ifequal teamplay.is_completed True %}
+                            <strong style="color:black !important">완료</strong>)
+                            {% endifequal %}
+                            
                             <!-- &nbsp;&nbsp;&nbsp; -->
                             <!-- 댓글수: {{teamplay.hits}} --><br>
                             {% if request.user == teamplay.user %}
