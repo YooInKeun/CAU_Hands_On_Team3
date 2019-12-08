@@ -12,7 +12,7 @@
 </head>
 
 <style>
-body{text-align: center;
+body{
 }
 #header{
     width:1200px;
@@ -57,6 +57,7 @@ p{
     font-weight:bold;
     
 }
+
  p:hover{
     color:cornflowerblue;
 }
@@ -88,6 +89,7 @@ section{
     border-top:1px solid black;
     margin: 15px;
     padding: 15px;
+    text-align: center;
 }
 section .card{   
     padding: 8px 2px 4px 2px;
@@ -129,7 +131,9 @@ section .card{
 .update-or-delete{
     display: inline-block;
 }
-
+h5, h6 {
+    display: inline;
+}
 </style>
 {% endblock extra-style %}
 
@@ -139,15 +143,19 @@ section .card{
 
 {% block content %}
 <body>
-    <img src="/static/img/reading.png" alt="mainlogo">
- 
+    <br>
+    <div style="text-align: center">
+    <a href="{% url 'community:lecture' %}" class="button logo"><img src="/static/img/reading.png" alt="mainlogo"></a>
+</div>
+    <br>
     <section>
             <div class="container" id="app">
+                    <br>
             <h1>
                 <div>
-                        <strong>{{lecture_name}}</strong> 과목 게시판 
+                        <strong>{{lecture_name}}</strong> 게시판
                 </div>
-            </h1>
+            </h1><br>
             
             <div class="row" style="margin-bottom: 10px;">    
                 <div class="card">
@@ -173,47 +181,95 @@ section .card{
                 </div>
                 <div class="col-4 rest-space"></div>
             </div>
-           
-
+           <br>
+            <div style="text-align: right; margin-right:15px;">
             <a href="{% url 'community:lecture' %}"><button class="btn btn-success btn-sm">강의 바로가기</button></a>
             <a href="{% url 'community:create_board' lecture_pk %}"><button class="btn btn-primary btn-sm">게시글 작성하기</button></a>
-            <div>
+            </div>
+            <div style="text-align: left;">
                 <div v-if="selectedContent === 1">
                     <div>
                         {% for study in studies %}
                         <div class="board-list">
-                            작성자: {{study.user}}
-                            <div class="update-or-delete">
+                            <h4 style="color:cornflowerblue">작성자: {{study.user}}</h4>
+                            <div style="text-align: right;">
+                            <h6>
+                            작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}
+                            <!-- &nbsp;&nbsp;&nbsp; -->
+                                <!-- 댓글수: {{study.hits}}--><br>
                                 {% if request.user == study.user %}
                                 <a href="{% url 'community:update_board' study.pk %}">수정하기</a>
-                                <a href="{% url 'community:delete_board' study.pk %}">삭제하기</a>
+                                <a href="{% url 'community:delete_board' study.pk %}" onclick="return confirm('해당 스터디 게시물을 삭제하시겠습니까?');">삭제하기</a>
                                 {% endif%}
+                            </h6>
                             </div>
-                            <br>
-
-                            제목: {{study.title}}<br>
-                            내용: {{study.content}}<br>
-                            작성일: {{study.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                            조회수: {{study.hits}}<br>
-                            좋아요 수: {{study.good}}<br>
-                            모집 완료 여부: {{study.is_completed}}<br>
+                            <h4>
+                            <strong style="color:black">제목: {{study.title}}</strong></h4><br>
+                            <h5>
+                            {{study.content}}<br></h5>
+                            <!-- 좋아요 수: {{study.good}}<br>
+                            모집 완료 여부: {{study.is_completed}}<br></h5> -->
                             <hr>
                             {% for study_reply in study_replys %}
                             {% ifequal study_reply.board study %}
-                            유저: {{study_reply.user}}<br>
-                            댓글 내용: {{study_reply.content}}<br>
+                            <strong style="color:black">{{study_reply.user}}</strong>
+                            &nbsp;&nbsp;{{study_reply.content}}<br>
                             {% if request.user == study_reply.user %}
-                            <a href="{% url 'community:update_reply' study_reply.pk %}">수정하기</a>
-                            <a href="{% url 'community:delete_reply' study_reply.pk %}">삭제하기</a>
-                            <br><br>
+                            <a style="color:blue" data-toggle="modal" onclick="modalOpen({{study_reply.pk}});">
+                                수정하기
+                            </a>
+                            <div class="modal fade" id="{{study_reply.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST" action="{% url 'community:update_reply' study_reply.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="reply" placeholder="댓글을 입력하세요">{{study_reply.content}}</textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input class="btn btn-primary" type="submit" value="수정완료">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                        </div>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <a href="{% url 'community:update_reply' study_reply.pk %}">수정하기</a> -->
                             {% endif%}
+                            {% if request.user == study_reply.user or request.user == study.user%}
+                            <a href="{% url 'community:delete_reply' study_reply.pk %}" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제하기</a>
+                            <br>
+                            {% endif%}
+                            
                             {% endifequal %}
                             {% endfor %}
                             <form method="POST" action="{% url 'community:create_reply' study.id %}">
                                 {% csrf_token %}
                                 <div class="reply">
-                                    댓글: <textarea name="reply"></textarea>
-                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                    <textarea class="form-control" id="exampleFormControlTextarea3" rows="2" name="reply" placeholder="댓글을 입력하세요"></textarea>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input class="btn btn-light btn-sm" type="submit" value="작성완료">
                                 </div>
                             </form>
                         </div>
@@ -224,38 +280,84 @@ section .card{
                     <div>
                         {% for teamplay in teamplays %}
                         <div class="board-list">
-                            작성자: {{teamplay.user}}
-                            <div class="update-or-delete">
-                                {% if request.user == teamplay.user %}
-                                <a href="{% url 'community:update_board' teamplay.pk %}">수정하기</a>
-                                <a href="{% url 'community:delete_board' teamplay.pk %}">삭제하기</a>
-                                {% endif%}
+                            <h4 style="color:cornflowerblue">작성자: {{teamplay.user}}</h4>
+                            <div style="text-align: right;">
+                            <h6>
+                            작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}
+                            <!-- &nbsp;&nbsp;&nbsp; -->
+                            <!-- 댓글수: {{teamplay.hits}} --><br>
+                            {% if request.user == teamplay.user %}
+                            <a href="{% url 'community:update_board' teamplay.pk %}">수정하기</a>
+                            <a href="{% url 'community:delete_board' teamplay.pk %}" onclick="return confirm('해당 팀플 게시물을 삭제하시겠습니까?');">삭제하기</a>
+                            {% endif%}
+                            </h6>
                             </div>
-                            <br>
-
-                            제목: {{teamplay.title}}<br>
-                            내용: {{teamplay.content}}<br>
-                            작성일: {{teamplay.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                            조회수: {{teamplay.hits}}<br>
-                            좋아요 수: {{teamplay.good}}<br>
-                            모집 완료 여부: {{teamplay.is_completed}}<br>
+                            <h4>
+                            <strong style="color:black">제목: {{teamplay.title}}</strong></h4><br>
+                            <h5>
+                            {{teamplay.content}}<br></h5>
+                            <!-- 좋아요 수: {{teamplay.good}}<br>
+                            모집 완료 여부: {{teamplay.is_completed}}<br></h5> -->
                             <hr>
                             {% for teamplay_reply in teamplay_replys %}
                             {% ifequal teamplay_reply.board teamplay %}
-                            유저: {{teamplay_reply.user}}<br>
-                            댓글 내용: {{teamplay_reply.content}}<br>
+                            <strong style="color:black">{{teamplay_reply.user}}</strong>
+                            &nbsp;&nbsp;{{teamplay_reply.content}}<br>
                             {% if request.user == teamplay_reply.user %}
-                            <a href="{% url 'community:update_reply' teamplay_reply.pk %}">수정하기</a>
-                            <a href="{% url 'community:delete_reply' teamplay_reply.pk %}">삭제하기</a>
-                            <br><br>
+                            <a style="color:blue" data-toggle="modal" data-target="#exampleModal">
+                                    수정하기
+                                </a>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="{% url 'community:update_reply' teamplay_reply.id %}">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="reply" placeholder="댓글을 입력하세요">{{teamplay_reply.content}}</textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input class="btn btn-primary" type="submit" value="수정완료">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- <a href="{% url 'community:update_reply' teamplay_reply.pk %}">수정하기</a> -->
+                            {% endif%}
+                            {% if request.user == teamplay_reply.user or request.user == teamplay.user%}
+                            <a href="{% url 'community:delete_reply' teamplay_reply.pk %}" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제하기</a>
+                            <br>
                             {% endif%}
                             {% endifequal %}
                             {% endfor %}
                             <form method="POST" action="{% url 'community:create_reply' teamplay.id %}">
                                 {% csrf_token %}
                                 <div class="reply">
-                                    댓글: <textarea name="reply"></textarea>
-                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                        <textarea class="form-control" id="exampleFormControlTextarea3" rows="2" name="reply" placeholder="댓글을 입력하세요"></textarea>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="btn btn-light btn-sm" type="submit" value="작성완료">
                                 </div>
                             </form>
                         </div>
@@ -266,38 +368,84 @@ section .card{
                     <div>
                         {% for review in reviews %}
                         <div class="board-list">
-                            작성자: {{review.user}}
-                            <div class="update-or-delete">
-                                {% if request.user == review.user %}
-                                <a href="{% url 'community:update_board' review.pk %}">수정하기</a>
-                                <a href="{% url 'community:delete_board' review.pk %}">삭제하기</a>
-                                {% endif%}
+                            <h4 style="color:cornflowerblue">작성자: {{review.user}}</h4>
+                            <div style="text-align: right;">
+                            <h6>
+                            작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}
+                            <!-- &nbsp;&nbsp;&nbsp; -->
+                            <!-- 댓글수: {{review.hits}} --><br>
+                            {% if request.user == review.user %}
+                            <a href="{% url 'community:update_board' review.pk %}">수정하기</a>
+                            <a href="{% url 'community:delete_board' review.pk %}" onclick="return confirm('해당 강의 후기 게시물을 삭제하시겠습니까?');">삭제하기</a>
+                            {% endif%}
+                            </h6>
                             </div>
-                            <br>
-
-                            제목: {{review.title}}<br>
-                            내용: {{review.content}}<br>
-                            작성일: {{review.created_at|date:'Y년 m월 d일 H시 i분'}}<br>
-                            조회수: {{review.hits}}<br>
-                            좋아요 수: {{review.good}}<br>
-                            모집 완료 여부: {{review.is_completed}}<br>
+                            <h4>
+                            <strong style="color:black">제목: {{review.title}}</strong></h4><br>
+                            <h5>
+                            {{review.content}}<br></h5>
+                            <!-- 좋아요 수: {{review.good}}<br>
+                            모집 완료 여부: {{review.is_completed}}<br></h5> -->
                             <hr>
                             {% for review_reply in review_replys %}
                             {% ifequal review_reply.board review %}
-                            유저: {{review_reply.user}}<br>
-                            댓글 내용: {{review_reply.content}}<br>
+                            <strong style="color:black">{{review_reply.user}}</strong>
+                            &nbsp;&nbsp;{{review_reply.content}}<br>
                             {% if request.user == review_reply.user %}
-                            <a href="{% url 'community:update_reply' review_reply.pk %}">수정하기</a>
-                            <a href="{% url 'community:delete_reply' review_reply.pk %}">삭제하기</a>
-                            <br><br>
+                            <a style="color:blue" data-toggle="modal" data-target="#exampleModal">
+                                    수정하기
+                                </a>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="{% url 'community:update_reply' review_reply.id %}">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="reply" placeholder="댓글을 입력하세요">{{review_reply.content}}</textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input class="btn btn-primary" type="submit" value="수정완료">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                            </div>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- <a href="{% url 'community:update_reply' review_reply.pk %}">수정하기</a> -->
+                            {% endif%}
+                            {% if request.user == review_reply.user or request.user == review.user%}
+                            <a href="{% url 'community:delete_reply' review_reply.pk %}" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제하기</a>
+                            <br>
                             {% endif%}
                             {% endifequal %}
                             {% endfor %}
                             <form method="POST" action="{% url 'community:create_reply' review.id %}">
                                 {% csrf_token %}
                                 <div class="reply">
-                                    댓글: <textarea name="reply"></textarea>
-                                    <input class="btn btn-success btn-sm" type="submit" value="작성완료">
+                                        <textarea class="form-control" id="exampleFormControlTextarea3" rows="2" name="reply" placeholder="댓글을 입력하세요"></textarea>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="btn btn-light btn-sm" type="submit" value="작성완료">
                                 </div>
                             </form>
                         </div>
@@ -333,5 +481,23 @@ section .card{
         }
     },
   })
+</script>
+<script>
+function noEvent() { // 새로 고침 방지
+        if (event.keyCode == 116) {
+            alert("새로고침을 할 수 없습니다.");
+            event.keyCode = 2;
+            return false;
+        } else if (event.ctrlKey
+                && (event.keyCode == 78 || event.keyCode == 82)) {
+            return false;
+        }
+    }
+document.onkeydown = noEvent;
+
+
+function modalOpen(x){
+    $("#" + x).modal();
+}
 </script>
 {% endblock extra-script %}

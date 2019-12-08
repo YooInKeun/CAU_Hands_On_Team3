@@ -11,5 +11,5 @@ if __name__=='__main__':
         data=list(csv.reader(csvDataFile))
 
         for i in range(1, len(data)):
-            Lecture(university=data[i][0], department=data[i][1], grade=data[i][2], completion_division=data[i][3], lecutre_number=data[i][4], 
+            Lecture(university=data[i][0], department=data[i][1], grade=data[i][2], completion_division=data[i][3], lecture_number=data[i][4], 
                     lecture_name=data[i][5], credit=data[i][6], professor_name=data[i][7], time_table=data[i][9]).save()

@@ -3,7 +3,22 @@
 {% load staticfiles %}
 
 {% block extra-style %}
+<head>
+    <link rel="stylesheet" href="./lecture.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+KR|Song+Myung&display=swap" rel="stylesheet">
+    <style>
+        @import url(//fonts.googleapis.com/earlyaccess/hanna.css);
+    </style>
+</head>
 <style>
+h2{
+    font-family: 'Song Myung', serif;
+
+}
+strong{
+    color:cornflowerblue;
+}
 </style>
 {% endblock extra-style %}
 
@@ -15,21 +30,40 @@
 <div class="container" id="app">
     <form action="{% url 'community:complete_create_board' lecture_pk %}" method="POST">
         {% csrf_token %}
-        강의명: {{selected_lecture}}<br>
-        분류:
+        <br><br>
+        <h2 style="text-align: center;"><strong>{{selected_lecture}}</strong> 게시글 작성</h2><br>
         <br>
+        <strong style="color:darkgray">분류<br>
         <select name='category'>
             <option value="스터디">스터디</option>
             <option value="팀플">팀플</option>
             <option value="강의 후기">강의 후기</option>
         </select>
         <br><br>
-        제목: <input type="text" name="title"><br><br>
-        내용: <textarea name="content"></textarea><br><br>
-        <input style="display:none" type="text" name='lecture_pk' value={{lecture_pk}}>
-        <input class="btn btn-primary btn-sm" type="submit" value="작성완료">
+        <strong style="color:darkgray">제목</strong> <textarea class="form-control" id="exampleFormControlTextarea3" rows="1" name="title" placeholder="제목을 입력하세요"></textarea><br>
+        <strong style="color:darkgray">내용</strong> <textarea class="form-control" id="exampleFormControlTextarea3" rows="3"  name="content" placeholder="내용을 입력하세요"></textarea><br><br>
+        <input style="display:none;" type="text" name='lecture_pk' value={{lecture_pk}}>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;
+        <input class="btn btn-success btn-sm" type="submit" value="작성완료">
     </form>
-    <a href="{% url 'community:lecture_detail' lecture_pk %}"><button class="btn btn-success btn-sm">게시판 바로가기</button></a>
+    <a href="{% url 'community:lecture_detail' lecture_pk %}"><button class="btn btn-primary btn-sm">게시판 바로가기</button></a>
 </div>
 {% endblock content %}
 
