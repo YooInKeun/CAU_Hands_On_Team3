@@ -8,6 +8,10 @@
     font-size: 16px;
     font-weight: 600;
   }
+
+  .category:hover{
+    color:cornflowerblue;
+  }
 </style>
 {% endblock %}
 
@@ -17,59 +21,64 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <div id="app" class="d-flex justify-content-center">
-    <div class="inputBox w-50">
-      <input id="user_id" type="text" value="{{ user.pk }}" style="visibility:hidden;" disabled />
 
-      <h2 class="text-center m-5">{{ user.last_name }}<small>님의 프로필</span></h2>
-      <h4 class="input-title">이름</h4>
-      <div class="input-wrap">
-        <input class="name form-control mb-3" type="text" value="{{ user.last_name }}" disabled />
-      </div>
-      <h4 class="input-title">아이디</h4>
-      <div class="input-wrap">
-        <input class="username form-control mb-3" type="text" value="{{ user.username }}" disabled />
-      </div>
-      <h4 class="input-title">E-mail</h4>
-      <div class="input-wrap">
-        <input class="email form-control mb-3" type="text" v-model.trim="email" />
-      </div>
+<div id="app">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <div class="inputBox w-50">
+        <input id="user_id" type="text" value="{{ user.pk }}" style="visibility:hidden;" disabled />
 
-      <h4 class="input-title">닉네임</h4>
-      <div class="input-wrap">
-        <input class="nickname form-control mb-3" type="text" v-model.trim="nickname" />
-      </div>
-      <h4 class="input-title">학과</h4>
-      <div class="input-wrap">
-        <input class="phone form-control mb-3" type="text" v-model.trim="department" />
-      </div>
-      <h4 class="input-title">학번</h4>
-      <div class="input-wrap">
-        <input class="phone form-control mb-3" type="text" v-model.trim="student_number" />
-      </div>
-
-      <!-- <h4 class="input-title">우편번호</h4>
-      <div class="input-wrap d-flex">
-        <div class="zip-code-wrap w-50 mb-3" @click="searchAddress()">
-          <input type="text" v-model.trim="zip_code" class="input-text input-zip-code form-control" />
+        <h2 class="text-center m-5">{{ user.last_name }}<small>님의 프로필</span></h2>
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{% url 'accounts:message' %}"><button class="btn btn-primary btn-sm">쪽지함 바로가기</button></a>
+          </div>
+        <h4 class="input-title">이름</h4>
+        <div class="input-wrap">
+          <input class="name form-control mb-3" type="text" value="{{ user.last_name }}" disabled />
         </div>
-        <button class="adrress-search-btn btn btn-primary w-50 mb-3 ml-1" @click="searchAddress()">주소검색</button>
+        <h4 class="input-title">아이디</h4>
+        <div class="input-wrap">
+          <input class="username form-control mb-3" type="text" value="{{ user.username }}" disabled />
+        </div>
+        <h4 class="input-title">E-mail</h4>
+        <div class="input-wrap">
+          <input class="email form-control mb-3" type="text" v-model.trim="email" />
+        </div>
+
+        <h4 class="input-title">닉네임</h4>
+        <div class="input-wrap">
+          <input class="nickname form-control mb-3" type="text" v-model.trim="nickname" />
+        </div>
+        <h4 class="input-title">학과</h4>
+        <div class="input-wrap">
+          <input class="phone form-control mb-3" type="text" v-model.trim="department" />
+        </div>
+        <h4 class="input-title">학번</h4>
+        <div class="input-wrap">
+          <input class="phone form-control mb-3" type="text" v-model.trim="student_number" />
+        </div>
+
+        <!-- <h4 class="input-title">우편번호</h4>
+        <div class="input-wrap d-flex">
+          <div class="zip-code-wrap w-50 mb-3" @click="searchAddress()">
+            <input type="text" v-model.trim="zip_code" class="input-text input-zip-code form-control" />
+          </div>
+          <button class="adrress-search-btn btn btn-primary w-50 mb-3 ml-1" @click="searchAddress()">주소검색</button>
+        </div>
+        <h4 class="input-title">주소</h4>
+        <div class="address-wrap">
+          <input type="text" v-model.trim="address" class="input-text input-address form-control mb-1" />
+        </div>
+        <div>
+          <input type="text" v-model.trim="address_detail" class="input-text input-address-detail  form-control mb-3"
+            placeholder="상세주소 입력" @focus="insertAddressInfo()" />
+        </div> -->
+        <button v-on:click="update_profile()" class="btn btn-primary w-100 mb-5">수정하기</button>
       </div>
-      <h4 class="input-title">주소</h4>
-      <div class="address-wrap">
-        <input type="text" v-model.trim="address" class="input-text input-address form-control mb-1" />
-      </div>
-      <div>
-        <input type="text" v-model.trim="address_detail" class="input-text input-address-detail  form-control mb-3"
-          placeholder="상세주소 입력" @focus="insertAddressInfo()" />
-      </div> -->
-      <button v-on:click="update_profile()" class="btn btn-primary w-100 mb-5">수정하기</button>
     </div>
   </div>
 </div>
 {% endblock %}
-
 {% block extra-script %}
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
@@ -138,30 +147,13 @@
             console.log("GET FAIL", err);
           });
       },
-      // searchAddress() {
-      //   new daum.Postcode({
-      //     oncomplete: function (data) {
-      //       var addr = "";
-
-      //       if (data.userSelectedType === "R") {
-      //         addr = data.roadAddress;
-      //       } 
-      //       else {
-      //         addr = data.jibunAddress;
-      //       }
-
-      //       document.querySelector(".input-zip-code").value =
-      //         data.zonecode;
-      //       document.querySelector(".input-address").value = addr;
-      //       document.querySelector(".input-address-detail").value = "";
-      //       document.querySelector(".input-address-detail").focus();
-      //     }
-      //   }).open();
-      // },
-      // insertAddressInfo() {
-      //   this.zip_code = this.$el.querySelector(".input-zip-code").value;
-      //   this.address = this.$el.querySelector(".input-address").value;
-      // },
+      selectCategory: function(num){
+          alert(num);
+          this.selectedContent = num;
+      },
+      messageModalOpen: function(user){
+          $("#" + user).modal();
+      },
     }
   });
 </script>

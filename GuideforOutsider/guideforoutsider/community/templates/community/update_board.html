@@ -4,6 +4,17 @@
 
 {% block extra-style %}
 <style>
+  h1, h2{
+    font-family: 'Song Myung', serif;
+
+}
+strong{
+    color:cornflowerblue;
+}
+
+.user-name:hover {
+  color: #81c147 !important;
+}
 </style>
 {% endblock extra-style %}
 
@@ -13,17 +24,37 @@
 
 {% block content %}
 <div class="container" id="app">
-    <h2>게시판 수정페이지 입니다</h2>
     <form action="{% url 'community:complete_update_board' board_pk %}" method="POST">
         {% csrf_token %}
-        강의: {{selected_board.lecture}}<br>
-        분류: {{selected_board.board_category}}<br>
-        제목: <input type="text" name="title" value="{{selected_board.title}}"><br><br>
-        내용: <textarea name="content">{{selected_board.content}}</textarea><br><br>
+        <br><br>
+        <h2 style="text-align: center;"><strong>{{selected_board.lecture}}</strong> 게시글 수정</h2><br>
+        <strong style="color:darkgray">분류</strong>
+        {{selected_board.board_category}}<br><br>
+        <strong style="color:darkgray">제목</strong>
+        <textarea class="form-control" id="exampleFormControlTextarea3" rows="1" name="title" placeholder="제목을 입력하세요">{{selected_board.title}}</textarea><br>
+        <strong style="color:darkgray">내용</strong> 
+        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3"  name="content" placeholder="내용을 입력하세요">{{selected_board.content}}</textarea><br><br>
         <input style="display:none" type="text" name='board_pk' value={{board_pk}}>
-        <input class="btn btn-primary btn-sm" type="submit" value="수정완료">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input class="btn btn-success btn-sm" type="submit" value="수정완료">
+        <a href="{% url 'community:lecture_detail' lecture_pk %}"><button class="btn btn-primary btn-sm">게시판 바로가기</button></a>
     </form>
-    <a href="{% url 'community:lecture_detail' lecture_pk %}"><button class="btn btn-success btn-sm">게시판 바로가기</button></a>
 </div>
 {% endblock content %}
 

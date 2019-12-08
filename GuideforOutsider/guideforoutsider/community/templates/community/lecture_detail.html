@@ -138,6 +138,7 @@ h5, h6 {
 .user-name:hover {
   color: #81c147 !important;
 }
+
 </style>
 {% endblock extra-style %}
 
@@ -149,7 +150,7 @@ h5, h6 {
 <body>
     <br>
     <div style="text-align: center">
-    <a href="{% url 'community:lecture' %}" class="button logo"><img src="/static/img/reading.png" alt="mainlogo"></a>
+    <a href="{% url 'home' %}" class="button logo"><img src="/static/img/reading.png" alt="mainlogo"></a>
 </div>
     <br>
     <section>
@@ -164,21 +165,21 @@ h5, h6 {
             <div class="row" style="margin-bottom: 10px;">    
                 <div class="card">
                 <h2>
-                    <div @click=selectCategory(1)  >
+                    <div class="category" @click=selectCategory(1)  >
                         <div>스터디</div>
                     </div>
                 </h2>
                 </div>
                 <div class="card">
                 <h2>
-                    <div @click=selectCategory(2) >
+                    <div  class="category" @click=selectCategory(2) >
                         <a><div>팀플</div></a>
                     </div>
                 </h2>
                 </div>
                 <div class="card">
                 <h2>
-                    <div @click=selectCategory(3) >
+                    <div  class="category" @click=selectCategory(3) >
                         <a><div>강의 후기</div></a>
                     </div>
                 </h2>

@@ -68,3 +68,8 @@ class Message(models.Model):
 
     def __str__(self):
         return str(self.sender) + ' -> ' + str(self.receiver)
+
+    @property
+    def created_at_korean_time(self):
+        korean_timezone = timezone(settings.TIME_ZONE)
+        return self.created_at.astimezone(korean_timezone)

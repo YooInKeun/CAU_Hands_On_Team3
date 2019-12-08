@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+
+{% block extra-style%}
+<style>
+  .input-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .category:hover{
+    color:cornflowerblue;
+  }
+
+  .pull-left{
+    border:3px solid cornflowerblue;
+    border-radius:12px;
+    /*border-color:black;
+    /* box-shadow: 0 0 10px 5px cornflowerblue; */
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:30px;
+    padding:25px;
+    float:left; width:1050px;
+  }
+  .pull-right{
+    border:3px solid cornflowerblue;
+    border-radius:12px;
+    /*border-color:black;
+    /* box-shadow: 0 0 10px 5px cornflowerblue; */
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:30px;
+    padding:25px;
+    float:left;width: 1050px;
+  }
+
+  .content{
+    font-size:17px;
+  }
+
+  .user-name:hover {
+  color: #81c147 !important;
+}
+</style>
+{% endblock %}
+
+
+{% block navbar%}
+{% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div id="app">
+  <div class="container">
+        <h2 class="text-center m-5">{{ user.last_name }}<small>님의 쪽지함</span>&nbsp;&nbsp;&nbsp;<a href="{% url 'accounts:profile' %}"><button class="btn btn-success btn-sm">프로필 바로가기</button></a></h2>
+
+    <div class="clearfix">
+      <div class="inputBox w-50">
+          <div  class="pull-left">
+        <h1 style="text-align: center !important;">보낸 쪽지함</h1>
+        <hr style="border: solid 0.5px gray;">
+        {% for sended_message in sended_messages %}
+        받은 사람: <strong class="user-name"  style="color:black" @click="messageModalOpen({{sended_message.receiver.id}})">{{sended_message.receiver}}</strong>
+        &nbsp;&nbsp;(작성일: {{sended_message.created_at|date:'Y년 m월 d일 H시 i분'}})
+        <div class="modal fade" id="{{sended_message.receiver.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{sended_message.receiver}}님에게 쪽지 보내기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{% url 'accounts:create_message' sended_message.receiver.id %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <input style="display:none;" type="text" name='message_lecture_pk' value={{sended_message.board.lecture.id}}>
+                        <input class="btn btn-primary" type="submit" value="작성완료">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="content">내용: 
+        {{sended_message.content}}
+        
+    </div>
+    <a href="{% url 'community:lecture_detail' sended_message.board.lecture.pk %}" onclick="return confirm('게시글로 이동하시겠습니까?');">게시글 이동</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="{% url 'accounts:delete_message' sended_message.pk %}" onclick="return confirm('쪽지를 삭제하시겠습니까?');">삭제하기</a>
+    <hr><br>
+        {% endfor %}
+    </div>
+        <br>
+        <br>
+<div  class="pull-right">
+        <h1 style="text-align: center !important;">받은 쪽지함</h1>
+        <hr style="border: solid 0.5px gray;">
+        {% for received_message in received_messages %}
+        보낸 사람: <strong class="user-name"  style="color:black" @click="messageModalOpen({{received_message.sender.id}})">{{received_message.sender}}</strong>
+        &nbsp;&nbsp;(작성일: {{received_message.created_at|date:'Y년 m월 d일 H시 i분'}})
+        <div class="modal fade" id="{{received_message.sender.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{received_message.sender}}님에게 쪽지 보내기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{% url 'accounts:create_message' received_message.sender.id %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <textarea class="form-control" id="exampleFormControlTextarea3" rows="4" name="message" placeholder="쪽지를 입력하세요"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <input style="display:none;" type="text" name='message_lecture_pk' value={{received_message.board.lecture.id}}>
+                        <input class="btn btn-primary" type="submit" value="작성완료">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        <div class="content">내용: {{received_message.content}}
+            
+    </div>
+    <a href="{% url 'community:lecture_detail' received_message.board.lecture.pk %}" onclick="return confirm('게시글로 이동하시겠습니까?');">게시글 이동</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="{% url 'accounts:delete_message' received_message.pk %}" onclick="return confirm('쪽지를 삭제하시겠습니까?');">삭제하기</a>
+    <hr>
+    <br>
+        {% endfor %}
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra-script %}
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+  axios.defaults.xsrfCookieName = "csrftoken";
+  axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+  var user = new Vue({
+    delimiters: ["[[", "]]"],
+    el: "#app",
+    data: {
+    },
+    created: function () {
+    },
+    mounted() {
+      // this.$el.querySelector(".input-zip-code").disabled = true;
+      // this.$el.querySelector(".input-address").disabled = true;
+    },
+    methods: {
+      messageModalOpen: function(user){
+          $("#" + user).modal();
+      },
+    }
+  });
+</script>
+<script>
+function noEvent() { // 새로 고침 방지
+        if (event.keyCode == 116) {
+            alert("새로고침을 할 수 없습니다.");
+            event.keyCode = 2;
+            return false;
+        } else if (event.ctrlKey
+                && (event.keyCode == 78 || event.keyCode == 82)) {
+            return false;
+        }
+    }
+document.onkeydown = noEvent;
+</script>
+{% endblock %}
