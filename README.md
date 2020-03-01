@@ -27,7 +27,7 @@
 <br>
 
 
-### ③ 사이트 URL
+### ③ 사이트 URL (배포 중단)
 
 
 http://cobuki-env.4gwrwjmaid.us-west-2.elasticbeanstalk.com/
